@@ -35,3 +35,41 @@ export default function request (url, options = {}) {
   .then(parseStatus)
   .then(parseData)
 }
+
+export function busyRequest () {
+  let busy = false
+  return (url, options) => {
+    return new Promise((resolve, reject) => {
+      if (!busy) {
+        busy = true
+        request(url, options)
+          .then(data => {
+            resolve(data)
+            busy = false
+          })
+          .catch(err => {
+            reject(err)
+            busy = false
+          })
+      }
+    })
+  }
+}
+
+export function lazyRequest () {
+  let timer = null
+  return (url, options, time = 500) => {
+    return new Promise((resolve, reject) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        request(url, options)
+          .then(data => {
+            resolve(data)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      }, time)
+    })
+  }
+}

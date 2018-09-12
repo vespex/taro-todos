@@ -1,0 +1,14 @@
+.card {
+  margin-bottom: 30px;
+  .card-content {
+    text-align: center;
+    .card-text {
+      font-size: 30px;
+    }
+    .opt-list {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

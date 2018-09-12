@@ -1,0 +1,13 @@
+.flex {
+  display: flex;
+  align-items: center;
+  &-jb {
+    justify-content: space-between;
+  }
+}
+.float-add {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background: #fff;
+}

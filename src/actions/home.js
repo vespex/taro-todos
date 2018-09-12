@@ -1,25 +1,72 @@
 import {
+  INIT,
+  DINIT,
   LIST,
-  DETAIL
+  DETAIL,
+  OPT,
+  DOPT,
+  ADD,
+  DEL,
+  DDEL,
 } from '../constants/home'
-import request from '../utils/request'
 
+export const init = (payload) => {
+  return {
+    type: INIT,
+    payload
+  }
+}
+export const detailInit = (payload) => {
+  return {
+    type: DINIT,
+    payload
+  }
+}
 export const list = (payload) => {
   return {
     type: LIST,
     payload
   }
 }
-export const detail = () => {
+export const detail = (payload) => {
   return {
-    type: DETAIL
+    type: DETAIL,
+    payload
+  }
+}
+export const opt = (payload) => {
+  return {
+    type: OPT,
+    payload
+  }
+}
+export const detailOpt = (payload) => {
+  return {
+    type: DOPT,
+    payload
+  }
+}
+export const add = (payload) => {
+  return {
+    type: ADD,
+    payload
+  }
+}
+export const del = (payload) => {
+  return {
+    type: DEL,
+    payload
+  }
+}
+export const detailDel = (payload) => {
+  return {
+    type: DDEL,
+    payload
   }
 }
 
-// 异步的action
-export function getList () {
+export function getInit () {
   return dispatch => {
-    request('/list')
-    .then(data => dispatch(list(data)))
+    dispatch(init())
   }
 }
