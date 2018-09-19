@@ -36,21 +36,30 @@
 }
 
 .float-bar {
-  background: rgba(0, 0, 0, .5);
   position: fixed;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
   visibility: hidden;
-  opacity: 0;
-  transition: .3s all;
   &.float-show {
     visibility: visible;
-    opacity: 1;
+    .float-bg {
+      opacity: 1;
+    }
     .float-content {
       transform: translateY(0);
     }
+  }
+  .float-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, .5);
+    opacity: 0;
+    transition: .3s all;
   }
   .float-content {
     position: absolute;

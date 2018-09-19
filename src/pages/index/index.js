@@ -122,7 +122,8 @@ class Index extends Component {
           </View>
         </AtFloatLayout>
         <View className='float-add' onClick={this.add.bind(this)}><AtIcon value='add-circle' size='30' color='#E45649'></AtIcon></View>
-        <View className={['float-bar', this.state.addShow && 'float-show']}>
+        <View className={['float-bar', this.state.addShow && 'float-show']} >
+          <View className='float-bg' onClick={this.quit.bind(this)}></View>
           <View className='float-content'>
             <View className='float-wrap'>
               <View className='flex'>
