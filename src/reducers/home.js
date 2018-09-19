@@ -1,4 +1,4 @@
-import { INIT, DINIT, LIST, DETAIL, OPT, DOPT, ADD, DEL, DDEL } from '../constants/home'
+import { INIT, DINIT, OPT, DOPT, ADD, DEL, DDEL } from '../constants/home'
 import {setStore, getStore} from '../utils/store'
 
 const options = [{name: 'star', value: false}]
@@ -24,21 +24,6 @@ const reducer = {
       ...state,
       detailId: payload.id,
       detailItem
-    }
-  },
-  [LIST] (state, payload) {
-    if (!payload) {
-      setStore('list', [])
-    }
-    return {
-      ...state,
-      list: payload
-    }
-  },
-  [DETAIL] (state, payload) {
-    return {
-      ...state,
-      detail: payload
     }
   },
   [ADD] (state, payload) {

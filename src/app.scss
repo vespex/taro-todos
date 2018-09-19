@@ -4,10 +4,73 @@
   &-jb {
     justify-content: space-between;
   }
+  &-ja {
+    justify-content: space-around;
+  }
+  &-je {
+    justify-content: flex-end;
+  }
+  &-1 {
+    flex: 1;
+  }
 }
 .float-add {
   position: fixed;
   bottom: 40px;
   right: 40px;
   background: #fff;
+}
+.list {
+  .item {
+    height: 100px;
+    line-height: 100px;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #efefef;
+  } 
+}
+.at-float-layout {
+  z-index: 2000;
+}
+
+.float-bar {
+  background: rgba(0, 0, 0, .5);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: .3s all;
+  &.float-show {
+    visibility: visible;
+    opacity: 1;
+    .float-content {
+      transform: translateY(0);
+    }
+  }
+  .float-content {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid #efefef;
+    transform: translateY(100%);
+    transition: .3s all;
+    .float-wrap {
+      padding: 30px;
+    }
+  }
+}
+
+.float-bottom {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+  border-top: 1px solid #efefef;
 }

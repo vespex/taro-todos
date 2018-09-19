@@ -62,23 +62,31 @@ class Detail extends Component {
     const detail = this.props.home.detailItem
     return (
       <View className='detail'>
-        <View><Text>{detail.title}</Text></View>
+        <View className='detail-title'><Text>{detail.title}</Text></View>
+        <View className='list'>
         {
           detail.list.map(item => (
-            <View key={item.id}>
-              <View><Text>{item.content}</Text></View>
-              <View><AtIcon className='icon' size='20' color='#ccc' value='trash' onClick={this.del.bind(this, item.id)}></AtIcon>{item.options.map((itm, idx) => <AtIcon className='icon' size='20' color='#E45649' key={idx} value={itm.name + (itm.value ? '-2' : '')} onClick={this.handleOptClick.bind(this, itm, item.id)}></AtIcon>)}</View>
+            <View key={item.id} className='content-blk item flex flex-jb'>
+              <View className='content-text'><Text>{item.content}</Text></View>
+              <View className='content-opt flex'><View className='opt'>{item.options.map((itm, idx) => <AtIcon className='icon' size='20' color='#E45649' key={idx} value={itm.name + (itm.value ? '-2' : '')} onClick={this.handleOptClick.bind(this, itm, item.id)}></AtIcon>)}</View><View className='opt'><AtIcon className='icon' size='20' color='#ccc' value='trash' onClick={this.del.bind(this, item.id)}></AtIcon></View></View>
             </View>
           ))
         }
-        <View>
-          <AtInput
-            type='text'
-            placeholder='输入一个内容'
-            value={this.state.contentValue}
-            onChange={this.handleContentChange}
-          ></AtInput>
-          <AtButton onClick={this.handleSubmit}>提交</AtButton>
+        </View>
+        <View className='float-bottom'>
+          <View className='detail-input flex flex-jb'>
+            <View className='flex-1'>
+              <AtInput
+                type='text'
+                placeholder='输入一个内容'
+                value={this.state.contentValue}
+                onChange={this.handleContentChange}
+              ></AtInput>
+            </View>
+            <View>
+              <AtButton type='primary' onClick={this.handleSubmit}>提交</AtButton>
+            </View>
+          </View>
         </View>
       </View>
     )

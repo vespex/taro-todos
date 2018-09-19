@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text, } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { AtCard, AtIcon, AtButton, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtInput, AtActionSheet, AtActionSheetItem } from 'taro-ui'
+import { AtCard, AtIcon, AtInput, AtButton, AtFloatLayout, } from 'taro-ui'
 
 import { init, opt, add, del } from '../../actions/home'
 
@@ -30,16 +30,18 @@ class Index extends Component {
   componentWillMount () {
     this.props.dispatch(init())
   }
- 
-  handleOptClick (item, id) {
-    this.props.dispatch(opt({...item, id}))
-  }
   add () {
     this.setState({
       addShow: true
     })
   }
-  del (id) {
+  handleOptClick (item, id, e) {
+    e.stopPropagation()
+    this.props.dispatch(opt({...item, id}))
+  }
+  
+  del (id, e) {
+    e.stopPropagation()
     this.delCount++
     clearTimeout(this.timer)
     this.timer = setTimeout(() => this.delCount = 0, 500)
@@ -71,7 +73,8 @@ class Index extends Component {
   }
   quit () {
     this.setState({
-      addShow: false,
+      listShow: false,
+      addShow: false
     })
   }
   handleChooseList (curId, titleValue) {
@@ -102,43 +105,58 @@ class Index extends Component {
       url: `/pages/detail/detail?id=${id}`
     })
   }
-
   render () {
     return (
       <View className='index'>
         {
-          this.props.home.list.map(item => <View className='card' key={item.id}><AtCard title={item.title} onClick={this.toDetail.bind(this, item.id)}><View className='card-content'><View><Text className='card-text'>{this.getDetail(item.id)}</Text></View><View className='opt-list'><View><AtIcon className='icon' size='20' color='#ccc' value='trash' onClick={this.del.bind(this, item.id)}></AtIcon></View><View>{item.options.map((itm, idx) => <AtIcon className='icon' size='20' color='#E45649' key={idx} value={itm.name + (itm.value ? '-2' : '')} onClick={this.handleOptClick.bind(this, itm, item.id)}></AtIcon>)}</View></View></View></AtCard></View>)
+          this.props.home.list.map(item => <View className='card' key={item.id}><AtCard title={item.title} onClick={this.toDetail.bind(this, item.id)}><View className='card-content'><View><Text className='card-text'>{this.getDetail(item.id)}</Text></View><View className='opt-list'><View><View onClick={this.del.bind(this, item.id)}><AtIcon className='icon' size='20' color='#ccc' value='trash' ></AtIcon></View></View><View>{item.options.map((itm, idx) => <View key={idx} onClick={this.handleOptClick.bind(this, itm, item.id)}><AtIcon className='icon' size='20' color='#E45649'  value={itm.name + (itm.value ? '-2' : '')} ></AtIcon></View>)}</View></View></View></AtCard></View>)
         }
+        <AtFloatLayout
+          className='float'
+          isOpened={this.state.listShow}
+          title='请选择一个标题'
+          onClose={this.closeList.bind(this)}
+        >
+          <View className='list'>
+            {this.props.home.list.map(item => <View className='item' key={item.id} onClick={this.handleChooseList.bind(this, item.id, item.title)}>{item.title}{this.state.curId === item.id ? <AtIcon value='check' size='20' color='#6190e8'></AtIcon> : ''}</View>)}
+          </View>
+        </AtFloatLayout>
         <View className='float-add' onClick={this.add.bind(this)}><AtIcon value='add-circle' size='30' color='#E45649'></AtIcon></View>
-        <AtModal isOpened={this.state.addShow}>
-          <AtModalHeader>标题</AtModalHeader>
-          <AtModalContent>
-            <View className='flex flex-jb'>
-              <AtInput
-                type='text'
-                placeholder='输入一个标题'
-                value={this.state.titleValue}
-                onChange={this.handleTitleChange}
-              >
-              </AtInput>
-              <AtButton size='small' onClick={this.openTitleList.bind(this)}><AtIcon value='chevron-down' size='20' color='#6190e8'></AtIcon></AtButton>
+        <View className={['float-bar', this.state.addShow && 'float-show']}>
+          <View className='float-content'>
+            <View className='float-wrap'>
+              <View className='flex'>
+                <View className='flex-1'>
+                  <AtInput
+                    type='text'
+                    placeholder='选择或添加一个标题'
+                    value={this.state.titleValue}
+                    onChange={this.handleTitleChange}
+                  >
+                  </AtInput>
+                </View>
+                <View size='small' onClick={this.openTitleList.bind(this)}><AtIcon value='chevron-down' size='20' color='#6190e8'></AtIcon></View>
+              </View>
+              <View>
+                <AtInput
+                  type='text'
+                  size='small'
+                  placeholder='添加一个内容'
+                  value={this.state.contentValue}
+                  onChange={this.handleContentChange}
+                ></AtInput>
+              </View>
+              <View className='input-btns flex flex-je'>
+                <View className='btn'>
+                  <AtButton onClick={this.quit.bind(this)}>取消</AtButton>
+                </View>
+                <View className='btn'>
+                  <AtButton type='primary' onClick={this.handleSubmit.bind(this)}>确定</AtButton>
+                </View>
+              </View>
             </View>
-            <AtInput
-              type='text'
-              placeholder='输入一个内容'
-              value={this.state.contentValue}
-              onChange={this.handleContentChange}
-            >
-            </AtInput>
-          </AtModalContent>
-          <AtModalAction>
-            <Button onClick={this.quit.bind(this)}>取消</Button>
-            <Button onClick={this.handleSubmit.bind(this)}>确定</Button>
-          </AtModalAction>
-        </AtModal>
-        <AtActionSheet isOpened={this.state.listShow} onClose={this.closeList.bind(this)} title='头部标题可以用通过转义字符换行'>
-          {this.props.home.list.map(item => <AtActionSheetItem key={item.id} onClick={this.handleChooseList.bind(this, item.id, item.title)}>{item.title}{this.state.curId === item.id ? <AtIcon value='check' size='20' color='#6190e8'></AtIcon> : ''}</AtActionSheetItem>)}
-        </AtActionSheet>
+          </View>
+        </View>
       </View>
     )
   }

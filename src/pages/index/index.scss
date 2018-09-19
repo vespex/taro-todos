@@ -12,3 +12,40 @@
     }
   }
 }
+.float-bar {
+  background: rgba(0, 0, 0, .5);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: .3s all;
+  &.float-show {
+    visibility: visible;
+    opacity: 1;
+    .float-content {
+      transform: translateY(0);
+    }
+  }
+  .float-content {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid #efefef;
+    transform: translateY(100%);
+    transition: .3s all;
+    .float-wrap {
+      padding: 30px;
+    }
+  }
+}
+
+.input-btns {
+  padding-top: 20px;
+  .btn {
+    margin-left: 20px;
+  }
+}
