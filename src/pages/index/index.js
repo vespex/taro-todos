@@ -50,10 +50,12 @@ class Index extends Component {
     }
   }
   handleTitleChange (e) {
-    this.setState({
-      titleValue: e,
-      curId: ''
-    })
+    if (e !== this.state.titleValue) {
+      this.setState({
+        titleValue: e,
+        curId: ''
+      })
+    }
   }
   handleContentChange (e) {
     this.setState({
@@ -66,7 +68,6 @@ class Index extends Component {
       this.props.dispatch(add({ id: this.state.curId, title: this.state.titleValue, content: this.state.contentValue }))
       this.setState({
         titleValue: item ? item.title : '',
-        contentValue: '',
       })
     }
     this.quit()
@@ -74,7 +75,8 @@ class Index extends Component {
   quit () {
     this.setState({
       listShow: false,
-      addShow: false
+      addShow: false,
+      contentValue: ''
     })
   }
   handleChooseList (curId, titleValue) {
@@ -109,7 +111,7 @@ class Index extends Component {
     return (
       <View className='index'>
         {
-          this.props.home.list.map(item => <View className='card' key={item.id}><AtCard title={item.title} onClick={this.toDetail.bind(this, item.id)}><View className='card-content'><View><Text className='card-text'>{this.getDetail(item.id)}</Text></View><View className='opt-list'><View><View onClick={this.del.bind(this, item.id)}><AtIcon className='icon' size='20' color='#ccc' value='trash' ></AtIcon></View></View><View>{item.options.map((itm, idx) => <View key={idx} onClick={this.handleOptClick.bind(this, itm, item.id)}><AtIcon className='icon' size='20' color='#E45649'  value={itm.name + (itm.value ? '-2' : '')} ></AtIcon></View>)}</View></View></View></AtCard></View>)
+          this.props.home.list.map(item => <View className='card' key={item.id}><AtCard title={item.title} onClick={this.toDetail.bind(this, item.id)}><View className='card-content'><View><Text className='card-text'>{this.getDetail(item.id)}</Text></View><View className='opt-list'><View><View onClick={this.del.bind(this, item.id)}><AtIcon size='20' color='#ccc' value='trash' ></AtIcon></View></View><View>{item.options.map((itm, idx) => <View key={idx} onClick={this.handleOptClick.bind(this, itm, item.id)}><AtIcon size='20' color='#E45649'  value={itm.name + (itm.value ? '-2' : '')} ></AtIcon></View>)}</View></View></View></AtCard></View>)
         }
         <AtFloatLayout
           className='float'
@@ -127,14 +129,17 @@ class Index extends Component {
           <View className='float-content'>
             <View className='float-wrap'>
               <View className='flex'>
-                <View className='flex-1'>
+                <View className='input-wrap flex-1'>
                   <AtInput
                     type='text'
                     placeholder='选择或添加一个标题'
                     value={this.state.titleValue}
-                    onChange={this.handleTitleChange}
+                    onChange={this.handleTitleChange.bind(this)}
                   >
                   </AtInput>
+                  <View className='add-icon'>
+                    {this.state.curId ? <AtIcon size='16' value='add' color='#999'></AtIcon> : ''}
+                  </View>
                 </View>
                 <View size='small' onClick={this.openTitleList.bind(this)}><AtIcon value='chevron-down' size='20' color='#6190e8'></AtIcon></View>
               </View>
@@ -144,15 +149,20 @@ class Index extends Component {
                   size='small'
                   placeholder='添加一个内容'
                   value={this.state.contentValue}
-                  onChange={this.handleContentChange}
+                  onChange={this.handleContentChange.bind(this)}
                 ></AtInput>
               </View>
-              <View className='input-btns flex flex-je'>
-                <View className='btn'>
-                  <AtButton onClick={this.quit.bind(this)}>取消</AtButton>
+              <View className='input-btns flex flex-jb'>
+                <View>
+                  <Text className='tip'>tip:双击删除按钮才可删除哦</Text>
                 </View>
-                <View className='btn'>
-                  <AtButton type='primary' onClick={this.handleSubmit.bind(this)}>确定</AtButton>
+                <View className='flex'>
+                  <View className='btn'>
+                    <AtButton onClick={this.quit.bind(this)}>取消</AtButton>
+                  </View>
+                  <View className='btn'>
+                    <AtButton type='primary' onClick={this.handleSubmit.bind(this)}>确定</AtButton>
+                  </View>
                 </View>
               </View>
             </View>

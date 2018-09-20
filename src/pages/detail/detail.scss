@@ -1,4 +1,5 @@
 .detail {
+  height: 100%;
   .detail-title {
     text-align: center;
     padding: 20px;
@@ -6,7 +7,7 @@
   .content-blk {
     padding: 0 20px;
     .opt {
-      margin-left: 10px;
+      margin: 0 10px;
     }
     .content-text {
       font-size: 30px;
@@ -14,5 +15,12 @@
   }
   .detail-input {
     padding: 20px;
+  }
+  .text-done {
+    color: #E45649;
+    text-decoration: line-through;
+  }
+  .list {
+    overflow-y: auto;
   }
 }

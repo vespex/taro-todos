@@ -38,7 +38,7 @@ const reducer = {
         options
       })
     }
-    const listOpt = { id: newId + parseInt(Math.random() * 100000), content, options }
+    const listOpt = { id: newId + parseInt(Math.random() * 100000), content, done: false}
     if (id) {
       content && detail.find(item => item.id === id).list.push(listOpt)
     } else {
@@ -87,7 +87,6 @@ const reducer = {
     const detail = state.detail.slice()
     const list = detail.find(item => item.id === state.detailId).list
     const listIndex = list.findIndex(item => item.id === payload.id)
-    console.log(listIndex, payload.id);
     listIndex !== -1 && list.splice(listIndex, 1)
     setStore('detail', detail)
     return {
@@ -99,8 +98,7 @@ const reducer = {
     const detail = state.detail.slice()
     const list = detail.find(item => item.id === state.detailId).list
     const listItem = list.find(item => item.id === payload.id)
-    const opt = listItem.options && listItem.options.find(item => item.name === payload.name)
-    opt && (opt.value = !payload.value)
+    listItem[payload.opt] = !listItem[payload.opt]
     setStore('detail', detail)
     return {
       ...state,

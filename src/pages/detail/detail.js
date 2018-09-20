@@ -29,7 +29,8 @@ class Detail extends Component {
     this.props.dispatch(detailInit({id: this.id}))
   }
  
-  del (id) {
+  del (id, e) {
+    e.stopPropagation()
     this.delCount++
     clearTimeout(this.timer)
     this.timer = setTimeout(() => this.delCount = 0, 500)
@@ -38,8 +39,8 @@ class Detail extends Component {
     }
   }
 
-  handleOptClick (item, id) {
-    this.props.dispatch(detailOpt({...item, id}))
+  handleOptClick (id, opt) {
+    this.props.dispatch(detailOpt({id, opt}))
   }
 
   handleContentChange (e) {
@@ -60,31 +61,35 @@ class Detail extends Component {
 
   render () {
     const detail = this.props.home.detailItem
+    console.log(detail);
     return (
-      <View className='detail'>
-        <View className='detail-title'><Text>{detail.title}</Text></View>
-        <View className='list'>
+      <View className='detail flex flex-column'>
+        <View className='db detail-title'><Text>{detail.title}</Text></View>
+        <View className='db list flex-1'>
         {
-          detail.list.map(item => (
-            <View key={item.id} className='content-blk item flex flex-jb'>
-              <View className='content-text'><Text>{item.content}</Text></View>
-              <View className='content-opt flex'><View className='opt'>{item.options.map((itm, idx) => <AtIcon className='icon' size='20' color='#E45649' key={idx} value={itm.name + (itm.value ? '-2' : '')} onClick={this.handleOptClick.bind(this, itm, item.id)}></AtIcon>)}</View><View className='opt'><AtIcon className='icon' size='20' color='#ccc' value='trash' onClick={this.del.bind(this, item.id)}></AtIcon></View></View>
+          detail.list && detail.list.map(item => (
+            <View key={item.id} className='content-blk item flex flex-jb' onClick={this.handleOptClick.bind(this, item.id, 'done')}>
+              <View className='content-text flex'>
+                <View className='opt'>{item.done ? <AtIcon size='20' color='#E45649' value='check-circle' ></AtIcon> : <AtIcon size='20' value='alert-circle' ></AtIcon>}</View>
+                <View><Text className={item.done ? 'text-done' : ''}>{item.content}</Text></View>
+              </View>
+              <View className='content-opt flex'><View className='opt' onClick={this.del.bind(this, item.id)}><AtIcon size='20' color='#ccc' value='trash'></AtIcon></View></View>
             </View>
           ))
         }
         </View>
-        <View className='float-bottom'>
+        <View className='db detail-bottom'>
           <View className='detail-input flex flex-jb'>
             <View className='flex-1'>
               <AtInput
                 type='text'
                 placeholder='输入一个内容'
                 value={this.state.contentValue}
-                onChange={this.handleContentChange}
+                onChange={this.handleContentChange.bind(this)}
               ></AtInput>
             </View>
             <View>
-              <AtButton type='primary' onClick={this.handleSubmit}>提交</AtButton>
+              <AtButton type='primary' onClick={this.handleSubmit.bind(this)}>提交</AtButton>
             </View>
           </View>
         </View>

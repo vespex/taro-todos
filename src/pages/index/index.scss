@@ -19,3 +19,11 @@
     margin-left: 20px;
   }
 }
+.input-wrap {
+  position: relative;
+  .add-icon {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+  }
+}

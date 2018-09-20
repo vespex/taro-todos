@@ -1,3 +1,6 @@
+page {
+  height: 100%;
+}
 .flex {
   display: flex;
   align-items: center;
@@ -9,6 +12,9 @@
   }
   &-je {
     justify-content: flex-end;
+  }
+  &-column {
+    flex-direction: column;
   }
   &-1 {
     flex: 1;
@@ -82,4 +88,12 @@
   bottom: 0;
   background: #fff;
   border-top: 1px solid #efefef;
+}
+
+.tip {
+  font-size: 28px;
+  color: #999;
+}
+.db {
+  width: 100%;
 }
