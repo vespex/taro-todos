@@ -19,6 +19,7 @@ const reducer = {
     }
   },
   [DINIT] (state, payload) {
+    state = this[INIT](state)
     const detailItem = state.detail.find(item => item.id === payload.id) || {}
     return {
       ...state,

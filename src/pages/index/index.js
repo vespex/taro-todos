@@ -123,7 +123,7 @@ class Index extends Component {
             {this.props.home.list.map(item => <View className='item' key={item.id} onClick={this.handleChooseList.bind(this, item.id, item.title)}>{item.title}{this.state.curId === item.id ? <AtIcon value='check' size='20' color='#6190e8'></AtIcon> : ''}</View>)}
           </View>
         </AtFloatLayout>
-        <View className='float-add' onClick={this.add.bind(this)}><AtIcon value='add-circle' size='30' color='#E45649'></AtIcon></View>
+        <View className='float-add' onClick={this.add.bind(this)}><AtIcon value='add-circle' size='36' color='#E45649'></AtIcon></View>
         <View className={['float-bar', this.state.addShow && 'float-show']} >
           <View className='float-bg' onClick={this.quit.bind(this)}></View>
           <View className='float-content'>
