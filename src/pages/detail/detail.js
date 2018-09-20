@@ -61,7 +61,6 @@ class Detail extends Component {
 
   render () {
     const detail = this.props.home.detailItem
-    console.log(detail);
     return (
       <View className='detail flex flex-column'>
         <View className='db detail-title'><Text>{detail.title}</Text></View>
