@@ -68,9 +68,10 @@ class Index extends Component {
       this.props.dispatch(add({ id: this.state.curId, title: this.state.titleValue, content: this.state.contentValue }))
       this.setState({
         titleValue: item ? item.title : '',
+      }, () => {
+        this.quit()
       })
     }
-    this.quit()
   }
   quit () {
     this.setState({
