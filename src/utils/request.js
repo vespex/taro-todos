@@ -1,6 +1,22 @@
 import Taro from '@tarojs/taro'
 
-export const baseUrl = process.env.NODE_ENV === 'development' ? 'https://www.easy-mock.com/mock/5b96128d7db69152d064760b/todos' : ''
+const isDev = process.env.NODE_ENV === 'development'
+
+const hostConf = {
+  'mock': 'https://www.easy-mock.com/mock/5b96128d7db69152d064760b/todos',
+  'local': 'http://127.0.0.1:3030'
+}
+
+const urlFormat = (url) => {
+  if (url.startsWith('/')) {
+    const urlSplit = url.slice(1).split('/')[0]
+    if (isDev && hostConf[urlSplit]) {
+      return url.replace('/' + urlSplit, hostConf[urlSplit])
+    }
+  }
+  return url
+}
+
 
 function parseStatus ({statusCode, errMsg, data}) {
   if (statusCode >= 200 && statusCode < 300) {
@@ -29,7 +45,7 @@ export default function request (url, options = {}) {
     ...options.header
   }
   return Taro.request({
-    url: baseUrl + url,
+    url: urlFormat(url),
     ...options
   })
   .then(parseStatus)

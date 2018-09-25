@@ -1,3 +1,4 @@
+import request from '../utils/request'
 import {
   INIT,
   DINIT,
@@ -66,6 +67,7 @@ export const detailDel = (payload) => {
 }
 
 export function getInit () {
+  request('/local/todos')
   return dispatch => {
     dispatch(init())
   }
