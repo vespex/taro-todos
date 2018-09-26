@@ -3,10 +3,12 @@ import { View, Text } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { AtIcon, AtInput, AtButton } from 'taro-ui'
 
-import {add, detailInit, detailDel, detailOpt } from '../../actions/home'
+import { initData, optData, addData, delData } from '../../actions/home'
 
 import './detail.scss'
 
+
+const type = 'detail'
 @connect(({ home }) => ({
   home
 }))
@@ -26,7 +28,7 @@ class Detail extends Component {
 
   componentWillMount () {
     this.id = this.$router.params.id
-    this.props.dispatch(detailInit({id: this.id}))
+    this.props.dispatch(initData({ type, id: this.id }))
   }
  
   del (id, e) {
@@ -35,12 +37,12 @@ class Detail extends Component {
     clearTimeout(this.timer)
     this.timer = setTimeout(() => this.delCount = 0, 500)
     if (this.delCount > 1) {
-      this.props.dispatch(detailDel({id}))
+      this.props.dispatch(delData({ type, id }))
     }
   }
 
-  handleOptClick (id, opt) {
-    this.props.dispatch(detailOpt({id, opt}))
+  handleOptClick (id, key) {
+    this.props.dispatch(optData({ type, id, key }))
   }
 
   handleContentChange (e) {
@@ -51,22 +53,24 @@ class Detail extends Component {
 
   handleSubmit () {
     if (this.state.contentValue) {
-      const {detailId, detailItem} = this.props.home
-      this.props.dispatch(add({ id: detailId, title: detailItem.title, content: this.state.contentValue }))
+      this.props.dispatch(addData({type, list_id: this.id, content: this.state.contentValue }))
       this.setState({
         contentValue: '',
       })
     }
   }
-
+  getTitle () {
+    const list = this.props.home.list.find(item => item.id === this.id)
+    return list ? list.title : ''
+  }
   render () {
-    const detail = this.props.home.detailItem
+    const {detail} = this.props.home
     return (
       <View className='detail flex flex-column'>
-        <View className='db detail-title'><Text>{detail.title}</Text></View>
+        <View className='db detail-title'><Text>{this.getTitle()}</Text></View>
         <View className='db list flex-1'>
         {
-          detail.list && detail.list.map(item => (
+          detail.map(item => (
             <View key={item.id} className='content-blk item flex flex-jb' onClick={this.handleOptClick.bind(this, item.id, 'done')}>
               <View className='content-text flex'>
                 <View className='opt'>{item.done ? <AtIcon size='20' color='#E45649' value='check-circle' ></AtIcon> : <AtIcon size='20' value='alert-circle' ></AtIcon>}</View>

@@ -3,9 +3,11 @@ import { View, Text, } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { AtCard, AtIcon, AtInput, AtButton, AtFloatLayout, } from 'taro-ui'
 
-import { init, opt, add, del } from '../../actions/home'
+import { initData, optData, addData, delData } from '../../actions/home'
 
 import './index.scss'
+
+const type = 'list'
 
 @connect(({ home }) => ({
   home
@@ -28,16 +30,16 @@ class Index extends Component {
   timer = null
 
   componentWillMount () {
-    this.props.dispatch(init())
+    this.props.dispatch(initData({type}))
   }
   add () {
     this.setState({
       addShow: true
     })
   }
-  handleOptClick (item, id, e) {
+  handleOptClick (id, key, e) {
     e.stopPropagation()
-    this.props.dispatch(opt({...item, id}))
+    this.props.dispatch(optData({type, id, key}))
   }
   
   del (id, e) {
@@ -46,7 +48,7 @@ class Index extends Component {
     clearTimeout(this.timer)
     this.timer = setTimeout(() => this.delCount = 0, 500)
     if (this.delCount > 1) {
-      this.props.dispatch(del({id}))
+      this.props.dispatch(delData({type, id}))
     }
   }
   handleTitleChange (e) {
@@ -63,15 +65,20 @@ class Index extends Component {
     })
   }
   handleSubmit () {
-    if (this.state.titleValue) {
+    if (this.state.titleValue && this.state.contentValue) {
       const item = this.props.home.list.find(itm => itm.id === this.state.curId)
-      this.props.dispatch(add({ id: this.state.curId, title: this.state.titleValue, content: this.state.contentValue }))
+      if (this.state.curId) {
+        this.props.dispatch(addData({type: 'detail', list_id: this.state.curId, content: this.state.contentValue }))
+      } else {
+        this.props.dispatch(addData({type, id: this.state.curId, title: this.state.titleValue, content: this.state.contentValue }))
+      }
       this.setState({
         titleValue: item ? item.title : '',
       }, () => {
         this.quit()
       })
     }
+    this.quit()
   }
   quit () {
     this.setState({
@@ -98,11 +105,6 @@ class Index extends Component {
       listShow: true
     })
   }
-  getDetail (id) {
-    const detail = this.props.home.detail.find(item => item.id === id).list
-    return detail.length ? detail[detail.length - 1].content : ''
-  }
-
   toDetail (id) {
     Taro.navigateTo({
       url: `/pages/detail/detail?id=${id}`
@@ -112,7 +114,7 @@ class Index extends Component {
     return (
       <View className='index'>
         {
-          this.props.home.list.map(item => <View className='card' key={item.id}><AtCard title={item.title} onClick={this.toDetail.bind(this, item.id)}><View className='card-content'><View><Text className='card-text'>{this.getDetail(item.id)}</Text></View><View className='opt-list'><View><View onClick={this.del.bind(this, item.id)}><AtIcon size='20' color='#ccc' value='trash' ></AtIcon></View></View><View>{item.options.map((itm, idx) => <View key={idx} onClick={this.handleOptClick.bind(this, itm, item.id)}><AtIcon size='20' color='#E45649'  value={itm.name + (itm.value ? '-2' : '')} ></AtIcon></View>)}</View></View></View></AtCard></View>)
+          this.props.home.list.map(item => <View className='card' key={item.id}><AtCard title={item.title} onClick={this.toDetail.bind(this, item.id)}><View className='card-content'><View><Text className='card-text'>{item.new}</Text></View><View className='opt-list'><View><View onClick={this.del.bind(this, item.id)}><AtIcon size='20' color='#ccc' value='trash' ></AtIcon></View></View><View><View onClick={this.handleOptClick.bind(this, item.id, 'stared')}><AtIcon size='20' color='#E45649'  value={item.stared ?  'star-2' : 'star'} ></AtIcon></View></View></View></View></AtCard></View>)
         }
         <AtFloatLayout
           className='float'

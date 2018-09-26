@@ -1,14 +1,9 @@
 import request from '../utils/request'
 import {
   INIT,
-  DINIT,
-  LIST,
-  DETAIL,
   OPT,
-  DOPT,
   ADD,
   DEL,
-  DDEL,
 } from '../constants/home'
 
 export const init = (payload) => {
@@ -17,58 +12,52 @@ export const init = (payload) => {
     payload
   }
 }
-export const detailInit = (payload) => {
-  return {
-    type: DINIT,
-    payload
-  }
-}
-export const list = (payload) => {
-  return {
-    type: LIST,
-    payload
-  }
-}
-export const detail = (payload) => {
-  return {
-    type: DETAIL,
-    payload
-  }
-}
+
 export const opt = (payload) => {
   return {
     type: OPT,
     payload
   }
 }
-export const detailOpt = (payload) => {
-  return {
-    type: DOPT,
-    payload
-  }
-}
+
 export const add = (payload) => {
   return {
     type: ADD,
     payload
   }
 }
+
 export const del = (payload) => {
   return {
     type: DEL,
     payload
   }
 }
-export const detailDel = (payload) => {
-  return {
-    type: DDEL,
-    payload
+
+export function initData({type, id}) {
+  return dispatch => {
+    request(`/local/todos/${type}/${id || ''}`)
+    .then(data => dispatch(init({type, id, data})))
   }
 }
 
-export function getInit () {
-  request('/local/todos')
+export function addData ({type, title, content, list_id}) {
   return dispatch => {
-    dispatch(init())
+    request(`/local/todos/${type}/add`, {method: 'POST', data: { title, content, list_id }})
+    .then(data => dispatch(add({type, data, })))
+  }
+}
+
+export function delData ({type, id}) {
+  return dispatch => {
+    request(`/local/todos/${type}/del`, {method: 'POST', data: { id }})
+    .then(() => dispatch(del({type, id})))
+  }
+}
+
+export function optData ({type, id, key}) {
+  return dispatch => {
+    request(`/local/todos/${type}/opt`, {method: 'POST', data: { id, key }})
+    .then(() => dispatch(opt({type, id, key})))
   }
 }

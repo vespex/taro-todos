@@ -28,6 +28,7 @@ function parseStatus ({statusCode, errMsg, data}) {
 }
 
 function parseData (res) {
+  console.log(res);
   if (res.status === 0) {
     return res.data
   }
